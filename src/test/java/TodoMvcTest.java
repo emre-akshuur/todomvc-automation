@@ -1,11 +1,14 @@
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.jupiter.api.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,9 +23,21 @@ public class TodoMvcTest {
     @Test
     void testHomepageTitle() throws Exception {
         driver.get("https://todomvc.com/");
+        driver.manage().window().maximize();
+
         String title = driver.getTitle();
         assertEquals("TodoMVC", title);
         takeScreenshot(driver, "todomvc.png");
+    }
+
+    @Test
+    void testClickReact() throws Exception {
+        driver.get("https://todomvc.com/");
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        WebElement reactLink = driver.findElement(By.cssSelector("a[href*='react']"));
+        reactLink.click();
+        takeScreenshot(driver, "todomvc_react.png");
     }
 
     @AfterAll

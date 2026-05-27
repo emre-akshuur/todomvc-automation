@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+//TODO: Refactor into POM
 
 public class TodoMvcTest {
     private static ChromeDriver driver;
@@ -71,7 +72,7 @@ public class TodoMvcTest {
 
         List<WebElement> todos = driver.findElements(By.cssSelector("[data-testid='todo-item-label'"));
 
-//      I've considered fragility in relation to order here. Current assuming insertion order is preserved.
+//      I've considered fragility in relation to order here. Currently assuming insertion order is preserved.
 //      If this proves fragile - consider alternate assertion method that is order agnostic
 
         String todo1 = todos.get(0).getText();

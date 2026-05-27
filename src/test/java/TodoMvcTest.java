@@ -2,13 +2,16 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.jupiter.api.*;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.interactions.Actions;
 
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 //TODO: Refactor into POM
+//TODO: Within the POM have a method for selecting the framework
 
 public class TodoMvcTest {
     private static ChromeDriver driver;
@@ -87,6 +90,56 @@ public class TodoMvcTest {
 //        assertEquals("Buy milk", todos.get(0).getText());
 //        assertEquals("Wash up", todos.get(1).getText());
 //        assertEquals("Dry clothes", todos.get(2).getText());
+
+    }
+
+    @Test
+    void addSingleCharacter(){
+        driver.get("https://todomvc.com/");
+        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+        reactLink.click();
+
+        WebElement input = driver.findElement(By.id("todo-input"));
+        input.sendKeys("a", Keys.RETURN);
+
+        // When you try to enter a single character to-do, the character remains present in the input box
+        // So here we are asserting that the 'a' still exists within the input box
+        String populatedInputText = input.getAttribute("value");
+        assertEquals("a", populatedInputText);
+
+        // When you add a to-do, 'todo-item-label' appears in the DOM
+        // Here we are asserting that it DOES NOT exist - this makes the test slightly more robust
+        boolean exists = driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
+        assertTrue(exists);
+
+
+    }
+
+    // modify a todo item by double clicking
+    // div with a class of view within a div with the class of container
+
+    @Test
+    void canEditTodo() throws InterruptedException {
+        driver.get("https://todomvc.com/");
+        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+        reactLink.click();
+
+        WebElement input = driver.findElement(By.id("todo-input"));
+        input.sendKeys("Buy milk", Keys.RETURN);
+
+        WebElement todoLabel = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
+        new Actions(driver)
+                .doubleClick(todoLabel)
+                .perform();
+        WebElement editInput = driver.findElement(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
+
+        editInput.click();
+        editInput.sendKeys("Test", Keys.RETURN);
+        Thread.sleep(3000);
+
+
+        //TODO: add assert
+
 
     }
 

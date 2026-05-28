@@ -7,6 +7,7 @@ import org.openqa.selenium.interactions.Actions;
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,15 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //TODO: Add cross platform edit input clearing method to POM
 
 //TODO: Write test for todo item being re ordered - this may be complex - consider putting on backburner
-//TODO: Write test for status bar displaying 0 items left with no items
-//TODO: Write test for status bar displaying 1 items left with 1 items
-//TODO: Write test for status bar displaying 2 items left with 2 items - could this be wrapped up into the add multiple
-// todos test or should we keep separate?
-//TODO: Write test regarding filters - active, completed, show all
-//TODO: Write test for 128 char limit
-//TODO: Write test for "Clear completed" link appearing in status bar once todo has been added
-//TODO: Write test for "Clear completed" link deleting all completed items
-//TODO: Write test for clicking down arrow symbol toggling all items completed or not completed
 
 
 
@@ -244,7 +236,187 @@ public class TodoMvcTest {
             assertTrue(footer.isEmpty());
     }
 
-    
+    @Test
+        void statusBarShowingZeroItems(){
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys("Buy milk", Keys.RETURN);
+
+            WebElement checkbox = driver.findElement(By.cssSelector("input[type='checkbox']"));
+            checkbox.click();
+
+            String todoCount = driver.findElement(By.className("todo-count")).getText();
+            assertEquals("0 items left!", todoCount);
+    }
+
+    @Test
+        void statusBarShowingOneItem(){
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys("Buy milk", Keys.RETURN);
+
+
+            String todoCount = driver.findElement(By.className("todo-count")).getText();
+            assertEquals("1 item left!", todoCount);
+    }
+
+    @Test
+        void statusBarShowingMultipleItems(){
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys("Buy milk", Keys.RETURN);
+            input.sendKeys("Buy bread", Keys.RETURN);
+            input.sendKeys("Go for a walk", Keys.RETURN);
+
+            String todoCount = driver.findElement(By.className("todo-count")).getText();
+            assertEquals("3 items left!", todoCount);
+    }
+
+    @Test
+        void statusBarShowActive() throws InterruptedException {
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys("Buy milk", Keys.RETURN);
+            input.sendKeys("Buy bread", Keys.RETURN);
+
+            List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
+            System.out.println(checkbox);
+            checkbox.get(1).click();
+
+            // now we need to grab the 'active' button and click
+            WebElement activeLink = driver.findElement(By.cssSelector("a[href*='active']"));
+            activeLink.click();
+            Thread.sleep(3000);
+            // can assert active tab is active - could be complex - come back to this
+
+            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
+            assertEquals(1, labels.size());
+            String todoText = labels.getFirst().getText();
+            assertEquals("Buy bread", todoText);
+        }
+
+    @Test
+        void statusBarShowCompleted(){
+        driver.get("https://todomvc.com/");
+        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+        reactLink.click();
+
+        WebElement input = driver.findElement(By.id("todo-input"));
+        input.sendKeys("Buy milk", Keys.RETURN);
+        input.sendKeys("Buy bread", Keys.RETURN);
+
+        List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
+        System.out.println(checkbox);
+        checkbox.get(1).click();
+
+        // now we need to grab the 'active' button and click
+        WebElement activeLink = driver.findElement(By.cssSelector("a[href*='completed']"));
+        activeLink.click();
+
+        List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
+        assertEquals(1, labels.size());
+        String todoText = labels.getFirst().getText();
+        assertEquals("Buy milk", todoText);
+    }
+
+    @Test
+        void statusBarShowAll(){
+        // potentially covered in the add multiple todos test
+    }
+
+    @Test
+        void charLimit128(){
+            // this test passing means there isn't a 128 char limit
+            // the lorem string is 129 characters long
+            String lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque pena";
+
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys(lorem, Keys.RETURN);
+
+            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
+            String todoText = labels.getFirst().getText();
+
+            assertEquals(lorem, todoText);
+
+    }
+
+    @Test
+        void clearCompletedLinkVisible(){
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys("Buy bread", Keys.RETURN);
+
+            String clearCompletedText = driver.findElement(By.className("clear-completed")).getText();
+            assertEquals("Clear completed", clearCompletedText);
+
+    }
+
+    @Test
+        void clearCompletedClears(){
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            WebElement input = driver.findElement(By.id("todo-input"));
+            input.sendKeys("Buy bread", Keys.RETURN);
+            input.sendKeys("Buy milk", Keys.RETURN);
+
+            List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
+            checkbox.get(1).click();
+
+            WebElement clearCompletedButton = driver.findElement(By.className("clear-completed"));
+            clearCompletedButton.click();
+
+            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
+
+            String todoText = labels.getFirst().getText();
+            assertEquals(1, labels.size());
+            assertEquals("Buy milk", todoText);
+
+    }
+
+    @Test
+    // add multiple todos, click the first checkbox, check all todos are "completed"
+    void checkAll() throws InterruptedException {
+        driver.get("https://todomvc.com/");
+        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+        reactLink.click();
+
+        WebElement input = driver.findElement(By.id("todo-input"));
+        input.sendKeys("Buy bread", Keys.RETURN);
+        input.sendKeys("Buy milk", Keys.RETURN);
+        input.sendKeys("Go for a walk", Keys.RETURN);
+        input.sendKeys("Hydrate", Keys.RETURN);
+
+        List<WebElement> toggleAllButton = driver.findElements(By.id("toggle-all"));
+        toggleAllButton.getFirst().click();
+
+        List<WebElement> todoItems = driver.findElements(By.cssSelector(".todo-list li"));
+
+        // need to learn about streams for situations like this
+        for(WebElement item : todoItems){
+            assertTrue(Objects.requireNonNull(item.getAttribute("class")).contains("completed"));
+        }
+    }
 
     @AfterAll
     static void closeBrowser() {

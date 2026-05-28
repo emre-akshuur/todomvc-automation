@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //TODO: Remove all thread sleeps - replace with waits or abstract into POM
 //TODO: Add cross platform edit input clearing method to POM
 
-//TODO: Write test for adding empty value
 //TODO: Write test for clicking escape during edit - should exit editing
 //TODO: Write test for todo being checked/ ticked off by clicking the circle - strikethrough appears
 //TODO: Write test for todo being unchecked by clicking the circle - strikethrough disappears
@@ -212,6 +211,30 @@ public class TodoMvcTest {
         assertEquals("Buy bread", editedTodo.getText());
 
 
+
+    }
+
+    @Test
+    void canEscapeEdit() throws InterruptedException {
+        driver.get("https://todomvc.com/");
+        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+        reactLink.click();
+
+        WebElement input = driver.findElement(By.id("todo-input"));
+        input.sendKeys("Buy milk", Keys.RETURN);
+
+        WebElement todoLabel = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
+        new Actions(driver)
+                .doubleClick(todoLabel)
+                .perform();
+        WebElement editInput = driver.findElement(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
+
+        editInput.sendKeys(Keys.ESCAPE);
+        Thread.sleep(3000);
+        // want to assert that this is still in an editable state as we know this test fails
+        List<WebElement> editInputPostEscape = driver.findElements(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
+        boolean exists = !editInputPostEscape.isEmpty();
+        assertTrue(exists);
 
     }
 

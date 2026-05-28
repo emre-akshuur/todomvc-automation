@@ -12,6 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 //TODO: Refactor into POM
 //TODO: Within the POM have a method for selecting the framework
+//TODO: Remove all thread sleeps - replace with waits or abstract into POM
+//TODO: Add cross platform edit input clearing method to POM
+
+//TODO: Write test for adding empty value
+//TODO: Write test for clicking escape during edit - should exit editing
+//TODO: Write test for todo being checked/ ticked off by clicking the circle
+//TODO: Write test for todo being unchecked by clicking the circle
+//TODO: Write test for todo being unchecked by clicking the circle
+
 
 public class TodoMvcTest {
     private static ChromeDriver driver;
@@ -76,7 +85,7 @@ public class TodoMvcTest {
         List<WebElement> todos = driver.findElements(By.cssSelector("[data-testid='todo-item-label'"));
 
 //      I've considered fragility in relation to order here. Currently assuming insertion order is preserved.
-//      If this proves fragile - consider alternate assertion method that is order agnostic
+//      If this proves fragile - consider alternative assertion method that is order agnostic
 
         String todo1 = todos.get(0).getText();
         String todo2 = todos.get(1).getText();
@@ -151,7 +160,7 @@ public class TodoMvcTest {
         WebElement editInput = driver.findElement(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
 
         // for some reason .clear() doesn't currently work
-        // Keys.CONTROL doesn't work - Keys.COMMAND does, but this will be be flaky depending on OS running test
+        // Keys.CONTROL doesn't work - Keys.COMMAND does (running on macOS), but this will be flaky depending on OS running test
         // Need to make it universal
         // When POM is introduced, consider creating a method that clears the editable text via a loop or !empty
         // Remember to look for the value
@@ -166,7 +175,6 @@ public class TodoMvcTest {
 
         assertEquals("Buy bread", editedTodo.getText());
 
-        //TODO: add assert
 
 
     }

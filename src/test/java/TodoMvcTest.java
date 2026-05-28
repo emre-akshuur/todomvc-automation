@@ -15,15 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //TODO: Remove all thread sleeps - replace with waits or abstract into POM
 //TODO: Add cross platform edit input clearing method to POM
 
-//TODO: Write test for clicking escape during edit - should exit editing
-//TODO: Write test for todo being checked/ ticked off by clicking the circle - strikethrough appears
-//TODO: Write test for todo being unchecked by clicking the circle - strikethrough disappears
 //TODO: Write test for todo item being re ordered - this may be complex - consider putting on backburner
 //TODO: Write test for status bar displaying 0 items left with no items
 //TODO: Write test for status bar displaying 1 items left with 1 items
 //TODO: Write test for status bar displaying 2 items left with 2 items - could this be wrapped up into the add multiple
 // todos test or should we keep separate?
-//TODO: Write test for status bar being hidden where there are no todos
 //TODO: Write test regarding filters - active, completed, show all
 //TODO: Write test for 128 char limit
 //TODO: Write test for "Clear completed" link appearing in status bar once todo has been added
@@ -237,6 +233,18 @@ public class TodoMvcTest {
         assertTrue(exists);
 
     }
+
+    @Test
+        void NoStatusBar() {
+            driver.get("https://todomvc.com/");
+            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+            reactLink.click();
+
+            List<WebElement> footer = driver.findElements(By.cssSelector("[data-testid='footer']"));
+            assertTrue(footer.isEmpty());
+    }
+
+    
 
     @AfterAll
     static void closeBrowser() {

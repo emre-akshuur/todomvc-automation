@@ -164,9 +164,6 @@ public class TodoMvcTest {
 
     }
 
-    // modify a todo item by double clicking
-    // div with a class of view within a div with the class of container
-
     @Test
     void canEditTodo() throws InterruptedException {
         driver.get("https://todomvc.com/");
@@ -406,8 +403,8 @@ public class TodoMvcTest {
         input.sendKeys("Go for a walk", Keys.RETURN);
         input.sendKeys("Hydrate", Keys.RETURN);
 
-        List<WebElement> toggleAllButton = driver.findElements(By.id("toggle-all"));
-        toggleAllButton.getFirst().click();
+        WebElement toggleAllButton = driver.findElement(By.id("toggle-all"));
+        toggleAllButton.click();
 
         List<WebElement> todoItems = driver.findElements(By.cssSelector(".todo-list li"));
 

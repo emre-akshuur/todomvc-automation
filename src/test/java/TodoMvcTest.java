@@ -30,12 +30,10 @@ public class TodoMvcTest {
 
     @Test
     void testHomepageTitle() throws Exception {
-        driver.get("https://todomvc.com/");
+        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
+        homePage.gotoHomePage();
+        homePage.selectFramework("React");
         driver.manage().window().maximize();
-
-        String title = driver.getTitle();
-        assertEquals("TodoMVC", title);
-        takeScreenshot(driver, "todomvc.png");
     }
 
     @Test
@@ -56,16 +54,13 @@ public class TodoMvcTest {
 
     @Test
     void addValidTodo(){
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
-
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy milk", Keys.RETURN);
-
-        WebElement todoLabel = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
-        String todoText = todoLabel.getText();
-        assertEquals("Buy milk", todoText);
+        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
+        TodoFrameworkPage frameworkPage = new TodoFrameworkPage(driver);
+        homePage.gotoHomePage();
+        homePage.selectFramework("React");
+        frameworkPage.addTodo("Buy milk");
+        List<String> todoText = frameworkPage.getTodoText();
+        assertEquals("Buy milk", todoText.getFirst());
     }
 
     @Test

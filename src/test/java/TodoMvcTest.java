@@ -395,7 +395,6 @@ public class TodoMvcTest {
     }
 
     @Test
-    // add multiple todos, click the first checkbox, check all todos are "completed"
     void checkAll() throws InterruptedException {
         driver.get("https://todomvc.com/");
         WebElement reactLink = driver.findElement(By.partialLinkText("React"));
@@ -412,10 +411,9 @@ public class TodoMvcTest {
 
         List<WebElement> todoItems = driver.findElements(By.cssSelector(".todo-list li"));
 
-        // need to learn about streams for situations like this
-        for(WebElement item : todoItems){
-            assertTrue(Objects.requireNonNull(item.getAttribute("class")).contains("completed"));
-        }
+        assertTrue(todoItems.stream()
+                .allMatch(todo -> Objects.requireNonNull(todo.getAttribute("class"))
+                        .contains("completed")));
     }
 
     @AfterAll

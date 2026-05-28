@@ -146,9 +146,34 @@ public class TodoMvcTest {
 
         // When you add a to-do, 'todo-item-label' appears in the DOM
         // Here we are asserting that it DOES NOT exist - this makes the test slightly more robust
-        boolean exists = driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
-        assertTrue(exists);
+        boolean doesNotExist = driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
+        assertTrue(doesNotExist);
 
+
+    }
+
+    @Test
+    void checkboxTick() throws InterruptedException {
+        driver.get("https://todomvc.com/");
+        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+        reactLink.click();
+
+        WebElement input = driver.findElement(By.id("todo-input"));
+        input.sendKeys("Buy Milk", Keys.RETURN);
+
+        // When checkbox is clicked, the class becomes 'completed'
+
+        WebElement checkbox = driver.findElement(By.cssSelector("input[type='checkbox']"));
+
+        checkbox.click();
+        assertTrue(checkbox.isSelected());
+        boolean strikeThrough = !driver.findElements(By.className("completed")).isEmpty();
+        assertTrue(strikeThrough);
+
+        checkbox.click();
+        assertTrue(!checkbox.isSelected());
+        boolean strikeThroughCleared = driver.findElements(By.className("completed")).isEmpty();
+        assertTrue(strikeThroughCleared);
 
     }
 

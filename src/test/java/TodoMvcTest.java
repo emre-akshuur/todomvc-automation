@@ -133,10 +133,21 @@ public class TodoMvcTest {
                 .perform();
         WebElement editInput = driver.findElement(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
 
-        editInput.click();
-        editInput.sendKeys("Test", Keys.RETURN);
+        // for some reason .clear() doesn't currently work
+        // Keys.CONTROL doesn't work - Keys.COMMAND does, but this will be be flaky depending on OS running test
+        // Need to make it universal
+        // When POM is introduced, consider creating a method that clears the editable text via a loop or !empty
+        // Remember to look for the value
+
+        editInput.sendKeys(Keys.COMMAND + "a");
+        editInput.sendKeys(Keys.BACK_SPACE);
+        Thread.sleep(3000);
+        editInput.sendKeys("Buy bread", Keys.RETURN);
         Thread.sleep(3000);
 
+        WebElement editedTodo = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
+
+        assertEquals("Buy bread", editedTodo.getText());
 
         //TODO: add assert
 

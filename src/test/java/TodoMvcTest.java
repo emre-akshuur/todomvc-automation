@@ -162,29 +162,16 @@ public class TodoMvcTest {
     }
 
     @Test
-        void statusBarShowActive() throws InterruptedException {
-//            driver.get("https://todomvc.com/");
-//            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-//            reactLink.click();
-//
-//            WebElement input = driver.findElement(By.id("todo-input"));
-//            input.sendKeys("Buy milk", Keys.RETURN);
-//            input.sendKeys("Buy bread", Keys.RETURN);
-//
-//            List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
-//            System.out.println(checkbox);
-//            checkbox.get(1).click();
-//
-//            // now we need to grab the 'active' button and click
-//            WebElement activeLink = driver.findElement(By.cssSelector("a[href*='active']"));
-//            activeLink.click();
-//            Thread.sleep(3000);
-//            // can assert active tab is active - could be complex - come back to this
-//
-//            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
-//            assertEquals(1, labels.size());
-//            String todoText = labels.getFirst().getText();
-//            assertEquals("Buy bread", todoText);
+        void statusBarShowActive() {
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.addTodo("Buy bread");
+        frameworkPage.clickCheckbox(1);
+
+        frameworkPage.tabLinks(TodoFrameworkPage.Tab.ACTIVE);
+
+        assertEquals(List.of("Buy bread"), frameworkPage.getTodosText());
+        assertEquals("1 item left!", frameworkPage.itemsLeftText());
+        assertEquals(1, frameworkPage.getTodoCount());
         }
 
     @Test

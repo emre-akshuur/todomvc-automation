@@ -29,6 +29,20 @@ public class TodoFrameworkPage {
     private By checkboxes = By.cssSelector("input[type='checkbox']");
     private By todoCount = By.className("todo-count");
 
+    enum Tab{
+        ALL("#/"),
+        ACTIVE("active"),
+        COMPLETED("completed");
+
+        private final String value;
+        Tab(String value) {
+            this.value = value;
+        }
+        public String getValue() {
+            return value;
+        }
+    }
+
     public TodoFrameworkPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -98,7 +112,6 @@ public class TodoFrameworkPage {
            editBox.sendKeys(Keys.BACK_SPACE);
         }
     }
-
     public void pressEscape() {
         WebElement editBox = driver.findElement(editInputLocator);
         editBox.sendKeys(Keys.ESCAPE);
@@ -107,4 +120,7 @@ public class TodoFrameworkPage {
         return driver.findElement(todoCount).getText();
     }
 
+    public void tabLinks(Tab tab) {
+        driver.findElement(By.cssSelector("a[href*=\"" + tab.getValue() + "\"]")).click();
+    }
 }

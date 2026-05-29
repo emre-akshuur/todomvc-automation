@@ -98,7 +98,7 @@ public class TodoMvcTest {
         assertEquals(0, todoCount );
     }
 
-    @Disabled("BUG: Single character todo should be added but it is not - nothing get's added")
+    @Disabled("BUG: Single character todo should be added but it is not - nothing gets added")
     @Test
     void addSingleCharacter(){
         frameworkPage.addTodo("a");
@@ -361,24 +361,16 @@ public class TodoMvcTest {
 
     @Test
     void checkAll() throws InterruptedException {
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
 
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy bread", Keys.RETURN);
-        input.sendKeys("Buy milk", Keys.RETURN);
-        input.sendKeys("Go for a walk", Keys.RETURN);
-        input.sendKeys("Hydrate", Keys.RETURN);
 
-        WebElement toggleAllButton = driver.findElement(By.id("toggle-all"));
-        toggleAllButton.click();
+        frameworkPage.addTodo("Buy bread");
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.addTodo("Go for a walk");
+        frameworkPage.addTodo("Hydrate");
 
-        List<WebElement> todoItems = driver.findElements(By.cssSelector(".todo-list li"));
+        frameworkPage.toggleAll();
 
-        assertTrue(todoItems.stream()
-                .allMatch(todo -> Objects.requireNonNull(todo.getAttribute("class"))
-                        .contains("completed")));
+        assertTrue(frameworkPage.areAllTodosCompleted());
     }
 
     @AfterAll

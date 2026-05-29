@@ -93,19 +93,9 @@ public class TodoMvcTest {
 
     @Test
     void noCharacters(){
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
-
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("", Keys.RETURN);
-
-        String populatedInputText = input.getAttribute("value");
-        assertEquals("", populatedInputText);
-
-        boolean exists = driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
-        assertTrue(exists);
-
+        frameworkPage.addTodo("");
+        int todoCount = frameworkPage.getTodoCount();
+        assertEquals(0, todoCount );
     }
 
     @Disabled("BUG: Single character todo should be added but it is not - nothing get's added")

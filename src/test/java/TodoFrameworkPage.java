@@ -39,4 +39,8 @@ public class TodoFrameworkPage {
         List<WebElement> todos = driver.findElements(todoItemLabel);
         return todos.stream().map(WebElement::getText).toList();
     }
+
+    public int getTodoCount(){
+       return driver.findElements(todoItemLabel).size();
+    }
 }

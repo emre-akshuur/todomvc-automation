@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class TodoMvcTest {
+    //Chrome and Firefox drivers works as intended
+    //Safari is too fast for some tests
     private static ChromeDriver driver;
     private static String FRAMEWORK = "React";
     private TodoMVCHomePage homePage;
@@ -66,7 +68,7 @@ public class TodoMvcTest {
     }
 
     @Test
-    void addValidTodo(){
+    void addValidTodo() throws InterruptedException {
         frameworkPage.addTodo("Buy milk");
         List<String> todoText = frameworkPage.getTodosText();
         assertEquals("Buy milk", todoText.getFirst());
@@ -98,9 +100,10 @@ public class TodoMvcTest {
     }
 
     @Test
-    void checkboxTick() throws InterruptedException {
+    void checkboxTick() {
 
         frameworkPage.addTodo("Buy milk");
+
         frameworkPage.clickCheckbox(1);
 
         assertTrue(frameworkPage.isTodoComplete(0));

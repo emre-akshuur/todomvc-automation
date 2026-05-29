@@ -26,7 +26,7 @@ public class TodoFrameworkPage {
     private By editInputLocator = By.cssSelector(("[data-testid='todo-item'] [data-testid='text-input']"));
     private By toggleAllCheckbox = By.id("toggle-all");
     private By todoItems = By.cssSelector(".todo-list li");
-    private By checkboxes = By.cssSelector("input[type='checkbox'");
+    private By checkboxes = By.cssSelector("input[type='checkbox']");
 
     public TodoFrameworkPage(WebDriver driver) {
         this.driver = driver;
@@ -34,6 +34,11 @@ public class TodoFrameworkPage {
 
     public void addTodo(String todo) {
         driver.findElement(todoInput).sendKeys(todo, Keys.ENTER);
+    }
+
+    public List<WebElement> getTodos() {
+        List<WebElement> todos = driver.findElements(todoItems);
+        return driver.findElements(todoItems);
     }
 
     public List<String> getTodosText() {
@@ -92,4 +97,10 @@ public class TodoFrameworkPage {
            editBox.sendKeys(Keys.BACK_SPACE);
         }
     }
+
+    public void pressEscape() {
+        WebElement editBox = driver.findElement(editInputLocator);
+        editBox.sendKeys(Keys.ESCAPE);
+    }
+
 }

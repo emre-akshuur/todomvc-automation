@@ -120,22 +120,11 @@ public class TodoMvcTest {
 
     @Disabled("BUG: ESC key should exit edit mode but does not - todo item remains in editable state")
     @Test
-    void canEscapeEdit() throws InterruptedException {
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
-
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy milk", Keys.RETURN);
-
-        WebElement todoLabel = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
-        new Actions(driver)
-                .doubleClick(todoLabel)
-                .perform();
-        WebElement editInput = driver.findElement(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
-
-        editInput.sendKeys(Keys.ESCAPE);
-        Thread.sleep(3000);
+    void canEscapeEdit() {
+        frameworkPage.addTodo("Buy Milk");
+        List<WebElement> todoList = frameworkPage.getTodos();
+        frameworkPage.doubleClick(todoList.getFirst());
+        frameworkPage.pressEscape();
 
         List<WebElement> editInputPostEscape = driver.findElements(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
         boolean exitedEditMode = editInputPostEscape.isEmpty();

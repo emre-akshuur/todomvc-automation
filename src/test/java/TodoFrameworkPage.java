@@ -28,6 +28,7 @@ public class TodoFrameworkPage {
     private By todoItems = By.cssSelector(".todo-list li");
     private By checkboxes = By.cssSelector("input[type='checkbox']");
     private By todoCount = By.className("todo-count");
+    private By clearCompleted = By.className("clear-completed");
 
     enum Tab{
         ALL("#/"),
@@ -122,5 +123,8 @@ public class TodoFrameworkPage {
 
     public void tabLinks(Tab tab) {
         driver.findElement(By.cssSelector("a[href*=\"" + tab.getValue() + "\"]")).click();
+    }
+    public void clickCompleted() {
+        driver.findElement(clearCompleted).click();
     }
 }

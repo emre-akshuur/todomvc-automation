@@ -176,26 +176,14 @@ public class TodoMvcTest {
 
     @Test
         void statusBarShowCompleted(){
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.addTodo("Buy bread");
+        frameworkPage.clickCheckbox(1);
+        frameworkPage.tabLinks(TodoFrameworkPage.Tab.COMPLETED);
 
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy milk", Keys.RETURN);
-        input.sendKeys("Buy bread", Keys.RETURN);
-
-        List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
-        System.out.println(checkbox);
-        checkbox.get(1).click();
-
-        // now we need to grab the 'active' button and click
-        WebElement activeLink = driver.findElement(By.cssSelector("a[href*='completed']"));
-        activeLink.click();
-
-        List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
-        assertEquals(1, labels.size());
-        String todoText = labels.getFirst().getText();
-        assertEquals("Buy milk", todoText);
+        assertEquals(List.of("Buy milk"), frameworkPage.getTodosText());
+        assertEquals("1 item left!", frameworkPage.itemsLeftText());
+        assertEquals(1, frameworkPage.getTodoCount());
     }
 
     @Test
@@ -208,63 +196,29 @@ public class TodoMvcTest {
             // this test passing means there isn't a 128 char limit
             // the lorem string is 129 characters long
             String lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque pena";
-
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys(lorem, Keys.RETURN);
-
-            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
-            String todoText = labels.getFirst().getText();
-
-            assertEquals(lorem, todoText);
-
+            frameworkPage.addTodo(lorem);
+            assertEquals(lorem, frameworkPage.getTodosText().getFirst());
     }
 
     @Test
         void clearCompletedLinkVisible(){
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys("Buy bread", Keys.RETURN);
-
-            String clearCompletedText = driver.findElement(By.className("clear-completed")).getText();
-            assertEquals("Clear completed", clearCompletedText);
-
+        frameworkPage.addTodo("Buy bread");
+        String clearCompletedText = driver.findElement(By.className("clear-completed")).getText();
+        assertEquals("Clear completed", clearCompletedText);
     }
 
     @Test
-        void clearCompletedClears(){
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys("Buy bread", Keys.RETURN);
-            input.sendKeys("Buy milk", Keys.RETURN);
-
-            List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
-            checkbox.get(1).click();
-
-            WebElement clearCompletedButton = driver.findElement(By.className("clear-completed"));
-            clearCompletedButton.click();
-
-            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
-
-            String todoText = labels.getFirst().getText();
-            assertEquals(1, labels.size());
-            assertEquals("Buy milk", todoText);
-
+        void clearCompletedClears() throws InterruptedException {
+        frameworkPage.addTodo("Buy bread");
+        frameworkPage.addTodo(("Buy milk"));
+        frameworkPage.clickCheckbox(1);
+        frameworkPage.clickCompleted();
+        assertEquals(List.of("Buy milk"), frameworkPage.getTodosText());
+        assertEquals(1, frameworkPage.getTodoCount());
     }
 
     @Test
     void checkAll() throws InterruptedException {
-
-
         frameworkPage.addTodo("Buy bread");
         frameworkPage.addTodo("Buy milk");
         frameworkPage.addTodo("Go for a walk");

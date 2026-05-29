@@ -112,6 +112,7 @@ public class TodoMvcTest {
 
     }
 
+    @Disabled("BUG: Single character todo should be added but it is not - nothing get's added")
     @Test
     void addSingleCharacter(){
         driver.get("https://todomvc.com/");
@@ -128,8 +129,8 @@ public class TodoMvcTest {
 
         // When you add a to-do, 'todo-item-label' appears in the DOM
         // Here we are asserting that it DOES NOT exist - this makes the test slightly more robust
-        boolean doesNotExist = driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
-        assertTrue(doesNotExist);
+        boolean todoExists = !driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
+        assertTrue(todoExists);
 
 
     }
@@ -194,6 +195,7 @@ public class TodoMvcTest {
 
     }
 
+    @Disabled("BUG: ESC key should exit edit mode but does not - todo item remains in editable state")
     @Test
     void canEscapeEdit() throws InterruptedException {
         driver.get("https://todomvc.com/");
@@ -211,10 +213,10 @@ public class TodoMvcTest {
 
         editInput.sendKeys(Keys.ESCAPE);
         Thread.sleep(3000);
-        // want to assert that this is still in an editable state as we know this test fails
+
         List<WebElement> editInputPostEscape = driver.findElements(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
-        boolean exists = !editInputPostEscape.isEmpty();
-        assertTrue(exists);
+        boolean exitedEditMode = editInputPostEscape.isEmpty();
+        assertTrue(exitedEditMode);
 
     }
 

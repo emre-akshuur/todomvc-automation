@@ -3,6 +3,24 @@ import org.openqa.selenium.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//COMPLETING
+//TODO: clickToggleAll
+//TODO: clickCheckbox(index)
+//TODO: areAllTodosCompleted
+//TODO: isTodoCompleted(index)
+
+//EDITING
+//TODO: doubleClickTodo(index)
+//TODO: clearEditInput(element) - backspace loop
+//TODO: editTodo(index, newText)
+
+//COUNTS
+//TODO: getTodoCount
+//TODO: isTodoListEmpty
+
+//CLEARING
+//TODO: clearCompleted
+
 public class TodoFrameworkPage {
     private WebDriver driver;
     private By todoInput = By.id("todo-input");

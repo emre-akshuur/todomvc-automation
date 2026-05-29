@@ -2,7 +2,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.junit.jupiter.api.*;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
 import java.time.Duration;
@@ -65,11 +67,6 @@ public class TodoMvcTest {
 
     @Test
     void addValidTodo(){
-        // KEEP FOR NOW TO EXPLAIN CHANGES
-//        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
-//        TodoFrameworkPage frameworkPage = new TodoFrameworkPage(driver);
-//        homePage.gotoHomePage();
-//        homePage.selectFramework(FRAMEWORK);
         frameworkPage.addTodo("Buy milk");
         List<String> todoText = frameworkPage.getTodosText();
         assertEquals("Buy milk", todoText.getFirst());
@@ -77,12 +74,6 @@ public class TodoMvcTest {
 
     @Test
     void addMultipleValidTodos(){
-//        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
-//        TodoFrameworkPage frameworkPage = new TodoFrameworkPage(driver);
-//
-//        homePage.gotoHomePage();
-//        homePage.selectFramework(FRAMEWORK);
-
         frameworkPage.addTodo("Buy milk");
         frameworkPage.addTodo("Wash up");
         frameworkPage.addTodo("Dry clothes");
@@ -108,62 +99,23 @@ public class TodoMvcTest {
 
     @Test
     void checkboxTick() throws InterruptedException {
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
 
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy Milk", Keys.RETURN);
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.clickCheckbox(1);
 
-        // When checkbox is clicked, the class becomes 'completed'
+        assertTrue(frameworkPage.isTodoComplete(0));
 
-        WebElement checkbox = driver.findElement(By.cssSelector("input[type='checkbox']"));
-
-        checkbox.click();
-        assertTrue(checkbox.isSelected());
-        boolean strikeThrough = !driver.findElements(By.className("completed")).isEmpty();
-        assertTrue(strikeThrough);
-
-        checkbox.click();
-        assertTrue(!checkbox.isSelected());
-        boolean strikeThroughCleared = driver.findElements(By.className("completed")).isEmpty();
-        assertTrue(strikeThroughCleared);
+        frameworkPage.clickCheckbox(1);
+        assertTrue(frameworkPage.isTodoNotComplete(0));
 
     }
 
     @Test
     void canEditTodo() throws InterruptedException {
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
-
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy milk", Keys.RETURN);
-
-        WebElement todoLabel = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
-        new Actions(driver)
-                .doubleClick(todoLabel)
-                .perform();
-        WebElement editInput = driver.findElement(By.cssSelector("[data-testid='todo-item'] [data-testid='text-input']"));
-
-        // for some reason .clear() doesn't currently work
-        // Keys.CONTROL doesn't work - Keys.COMMAND does (running on macOS), but this will be flaky depending on OS running test
-        // Need to make it universal
-        // When POM is introduced, consider creating a method that clears the editable text via a loop or !empty
-        // Remember to look for the value
-
-        editInput.sendKeys(Keys.COMMAND + "a");
-        editInput.sendKeys(Keys.BACK_SPACE);
-        Thread.sleep(3000);
-        editInput.sendKeys("Buy bread", Keys.RETURN);
-        Thread.sleep(3000);
-
-        WebElement editedTodo = driver.findElement(By.cssSelector("[data-testid='todo-item-label'"));
-
-        assertEquals("Buy bread", editedTodo.getText());
-
-
-
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.editTodo(0, "Buy bread");
+        List<String> todoText = frameworkPage.getTodosText();
+        assertEquals("Buy bread", todoText.getFirst());
     }
 
     @Disabled("BUG: ESC key should exit edit mode but does not - todo item remains in editable state")

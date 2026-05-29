@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class TodoFrameworkPage {
     private WebDriver driver;
     private By todoInput = By.id("todo-input");
-    private By todoItemLabel = By.cssSelector(("[data-testid='todo-item-label']"));
+    private By todoItemLabels = By.cssSelector(("[data-testid='todo-item-label']"));
     private By editInputLocator = By.cssSelector(("[data-testid='todo-item'] [data-testid='text-input']"));
 
     public TodoFrameworkPage(WebDriver driver) {
@@ -36,11 +36,11 @@ public class TodoFrameworkPage {
     }
 
     public List<String> getTodosText() {
-        List<WebElement> todos = driver.findElements(todoItemLabel);
+        List<WebElement> todos = driver.findElements(todoItemLabels);
         return todos.stream().map(WebElement::getText).toList();
     }
 
     public int getTodoCount(){
-       return driver.findElements(todoItemLabel).size();
+       return driver.findElements(todoItemLabels).size();
     }
 }

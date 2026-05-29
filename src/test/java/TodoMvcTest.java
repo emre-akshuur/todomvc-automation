@@ -101,24 +101,9 @@ public class TodoMvcTest {
     @Disabled("BUG: Single character todo should be added but it is not - nothing get's added")
     @Test
     void addSingleCharacter(){
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
-
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("a", Keys.RETURN);
-
-        // When you try to enter a single character to-do, the character remains present in the input box
-        // So here we are asserting that the 'a' still exists within the input box
-        String populatedInputText = input.getAttribute("value");
-        assertEquals("a", populatedInputText);
-
-        // When you add a to-do, 'todo-item-label' appears in the DOM
-        // Here we are asserting that it DOES NOT exist - this makes the test slightly more robust
-        boolean todoExists = !driver.findElements(By.cssSelector("[data-testid='todo-item-label'")).isEmpty();
-        assertTrue(todoExists);
-
-
+        frameworkPage.addTodo("a");
+        int todoCount = frameworkPage.getTodoCount();
+        assertEquals(1, todoCount);
     }
 
     @Test

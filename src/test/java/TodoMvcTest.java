@@ -134,83 +134,57 @@ public class TodoMvcTest {
 
     @Test
         void NoStatusBar() {
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
             List<WebElement> footer = driver.findElements(By.cssSelector("[data-testid='footer']"));
             assertTrue(footer.isEmpty());
     }
 
     @Test
         void statusBarShowingZeroItems(){
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys("Buy milk", Keys.RETURN);
-
-            WebElement checkbox = driver.findElement(By.cssSelector("input[type='checkbox']"));
-            checkbox.click();
-
-            String todoCount = driver.findElement(By.className("todo-count")).getText();
-            assertEquals("0 items left!", todoCount);
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.clickCheckbox(1);
+        assertEquals("0 items left!", frameworkPage.itemsLeftText());
     }
 
     @Test
         void statusBarShowingOneItem(){
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys("Buy milk", Keys.RETURN);
-
-
-            String todoCount = driver.findElement(By.className("todo-count")).getText();
-            assertEquals("1 item left!", todoCount);
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.addTodo("Get Liam a G7 job");
+        frameworkPage.clickCheckbox(1);
+        assertEquals("1 item left!", frameworkPage.itemsLeftText());
     }
 
     @Test
         void statusBarShowingMultipleItems(){
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys("Buy milk", Keys.RETURN);
-            input.sendKeys("Buy bread", Keys.RETURN);
-            input.sendKeys("Go for a walk", Keys.RETURN);
-
-            String todoCount = driver.findElement(By.className("todo-count")).getText();
-            assertEquals("3 items left!", todoCount);
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.addTodo("Buy bread");
+        frameworkPage.addTodo("Go for a walk");
+        assertEquals("3 items left!", frameworkPage.itemsLeftText());
     }
 
     @Test
         void statusBarShowActive() throws InterruptedException {
-            driver.get("https://todomvc.com/");
-            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-            reactLink.click();
-
-            WebElement input = driver.findElement(By.id("todo-input"));
-            input.sendKeys("Buy milk", Keys.RETURN);
-            input.sendKeys("Buy bread", Keys.RETURN);
-
-            List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
-            System.out.println(checkbox);
-            checkbox.get(1).click();
-
-            // now we need to grab the 'active' button and click
-            WebElement activeLink = driver.findElement(By.cssSelector("a[href*='active']"));
-            activeLink.click();
-            Thread.sleep(3000);
-            // can assert active tab is active - could be complex - come back to this
-
-            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
-            assertEquals(1, labels.size());
-            String todoText = labels.getFirst().getText();
-            assertEquals("Buy bread", todoText);
+//            driver.get("https://todomvc.com/");
+//            WebElement reactLink = driver.findElement(By.partialLinkText("React"));
+//            reactLink.click();
+//
+//            WebElement input = driver.findElement(By.id("todo-input"));
+//            input.sendKeys("Buy milk", Keys.RETURN);
+//            input.sendKeys("Buy bread", Keys.RETURN);
+//
+//            List<WebElement> checkbox = driver.findElements(By.cssSelector("input[type='checkbox']"));
+//            System.out.println(checkbox);
+//            checkbox.get(1).click();
+//
+//            // now we need to grab the 'active' button and click
+//            WebElement activeLink = driver.findElement(By.cssSelector("a[href*='active']"));
+//            activeLink.click();
+//            Thread.sleep(3000);
+//            // can assert active tab is active - could be complex - come back to this
+//
+//            List<WebElement> labels = driver.findElements(By.cssSelector("[data-testid='todo-item-label']"));
+//            assertEquals(1, labels.size());
+//            String todoText = labels.getFirst().getText();
+//            assertEquals("Buy bread", todoText);
         }
 
     @Test

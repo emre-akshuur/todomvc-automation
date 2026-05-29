@@ -27,6 +27,7 @@ public class TodoFrameworkPage {
     private By toggleAllCheckbox = By.id("toggle-all");
     private By todoItems = By.cssSelector(".todo-list li");
     private By checkboxes = By.cssSelector("input[type='checkbox']");
+    private By todoCount = By.className("todo-count");
 
     public TodoFrameworkPage(WebDriver driver) {
         this.driver = driver;
@@ -101,6 +102,9 @@ public class TodoFrameworkPage {
     public void pressEscape() {
         WebElement editBox = driver.findElement(editInputLocator);
         editBox.sendKeys(Keys.ESCAPE);
+    }
+    public String itemsLeftText() {
+        return driver.findElement(todoCount).getText();
     }
 
 }

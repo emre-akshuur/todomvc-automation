@@ -35,7 +35,7 @@ public class TodoFrameworkPage {
         driver.findElement(todoInput).sendKeys(todo, Keys.ENTER);
     }
 
-    public List<String> getTodoText() {
+    public List<String> getTodosText() {
         List<WebElement> todos = driver.findElements(todoItemLabel);
         return todos.stream().map(WebElement::getText).toList();
     }

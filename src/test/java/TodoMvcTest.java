@@ -22,10 +22,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TodoMvcTest {
     private static ChromeDriver driver;
+    private static String FRAMEWORK = "React";
+    private TodoMVCHomePage homePage;
+    private TodoFrameworkPage frameworkPage;
 
     @BeforeAll
     static void launchBrowser() {
         driver = new ChromeDriver();
+    }
+
+    @BeforeEach
+    void setup(){
+         homePage = new TodoMVCHomePage(driver);
+         frameworkPage = new TodoFrameworkPage(driver);
+         homePage.gotoHomePage();
+         homePage.selectFramework(FRAMEWORK);
     }
 
     @Test
@@ -54,45 +65,30 @@ public class TodoMvcTest {
 
     @Test
     void addValidTodo(){
-        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
-        TodoFrameworkPage frameworkPage = new TodoFrameworkPage(driver);
-        homePage.gotoHomePage();
-        homePage.selectFramework("React");
+        // KEEP FOR NOW TO EXPLAIN CHANGES
+//        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
+//        TodoFrameworkPage frameworkPage = new TodoFrameworkPage(driver);
+//        homePage.gotoHomePage();
+//        homePage.selectFramework(FRAMEWORK);
         frameworkPage.addTodo("Buy milk");
-        List<String> todoText = frameworkPage.getTodoText();
+        List<String> todoText = frameworkPage.getTodosText();
         assertEquals("Buy milk", todoText.getFirst());
     }
 
     @Test
     void addMultipleValidTodos(){
-        driver.get("https://todomvc.com/");
-        WebElement reactLink = driver.findElement(By.partialLinkText("React"));
-        reactLink.click();
+//        TodoMVCHomePage homePage = new TodoMVCHomePage(driver);
+//        TodoFrameworkPage frameworkPage = new TodoFrameworkPage(driver);
+//
+//        homePage.gotoHomePage();
+//        homePage.selectFramework(FRAMEWORK);
 
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys("Buy milk", Keys.RETURN);
-        input.sendKeys("Wash up", Keys.RETURN);
-        input.sendKeys("Dry clothes", Keys.RETURN);
+        frameworkPage.addTodo("Buy milk");
+        frameworkPage.addTodo("Wash up");
+        frameworkPage.addTodo("Dry clothes");
 
-
-        List<WebElement> todos = driver.findElements(By.cssSelector("[data-testid='todo-item-label'"));
-
-//      I've considered fragility in relation to order here. Currently assuming insertion order is preserved.
-//      If this proves fragile - consider alternative assertion method that is order agnostic
-
-        String todo1 = todos.get(0).getText();
-        String todo2 = todos.get(1).getText();
-        String todo3 = todos.get(2).getText();
-
-        assertEquals("Buy milk", todo1);
-        assertEquals("Wash up", todo2);
-        assertEquals("Dry clothes", todo3);
-
-//        An inline version
-//        assertEquals("Buy milk", todos.get(0).getText());
-//        assertEquals("Wash up", todos.get(1).getText());
-//        assertEquals("Dry clothes", todos.get(2).getText());
-
+        List<String> todosText = frameworkPage.getTodosText();
+        assertEquals(List.of("Buy milk", "Wash up", "Dry clothes"), todosText);
     }
 
     @Test
